@@ -5,6 +5,7 @@ Answering the question: how many media atoms have been created and how often hav
 ## Usage
 - `nvm use`
 - `npm install`
+- Set `CAPI_KEY` environment variable
 - `npm run get-statistics`
 
 A csv file will be created in the current directory outlining:
