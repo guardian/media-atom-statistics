@@ -4,13 +4,13 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "get-statistics": "node ./main.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "console.table": "^0.8.0",
-    "crypto": "0.0.3",
     "json2csv": "^3.7.3",
     "reqwest": "^2.0.5",
     "xhr2": "^0.1.4"
