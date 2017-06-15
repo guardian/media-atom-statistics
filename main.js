@@ -8,7 +8,7 @@ const json2csv = require('json2csv');
 const CAPI = require('./capi');
 const Config = require('./config');
 
-CAPI.getAtoms({pageSize: 100})
+CAPI.getAtoms()
     .then(atoms => {
         const promises = atoms.reduce((promisesList, atom) => {
             promisesList.push(new Promise(resolve => {

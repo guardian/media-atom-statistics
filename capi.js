@@ -1,12 +1,24 @@
 const reqwest = require('reqwest');
+const querystring = require('querystring');
 
 const Config = require('./config');
 
 class CAPI {
-    static getAtoms({pageSize = 200}) {
-        function capiQuery({pageSize, page}) {
+    static getAtoms() {
+        function capiQuery({page}) {
+            const query = {
+                types: Config.atomType,
+                'page-size': Config.pageSize,
+                page: page,
+                'api-key': Config.capiKey,
+                'from-date': Config.fromDateAsString,
+                'to-date': Config.toDateAsString
+            };
+
+            const url = `${Config.capiDomain}/atoms?${querystring.stringify(query)}`;
+
             const reqwestBody = {
-                url: `${Config.capiDomain}/atoms?types=${Config.atomType}&page-size=${pageSize}&page=${page}&&api-key=${Config.capiKey}`,
+                url: url,
                 method: 'GET',
                 contentType: 'application/json'
             };
@@ -15,7 +27,7 @@ class CAPI {
         }
 
         return new Promise((resolve, reject) => {
-            capiQuery({pageSize, page: 1})
+            capiQuery({page: 1})
                 .then(initialResponse => {
                     const initialAtoms = initialResponse.response.results;
                     const totalPages = initialResponse.response.pages;
@@ -27,7 +39,7 @@ class CAPI {
 
                         let page = 2;
                         while (totalPages >= page) {
-                            promisesList.push(capiQuery({pageSize, page}));
+                            promisesList.push(capiQuery({page}));
                             page = page + 1;
                         }
 
@@ -47,9 +59,18 @@ class CAPI {
         });
     }
 
-    static getAtomUsage({atomId, pageSize = 50}) {
+    static getAtomUsage({atomId}) {
+        const query = {
+            'api-key': Config.capiKey,
+            'page-size': Config.pageSize,
+            'from-date': Config.fromDateAsString,
+            'to-date': Config.toDateAsString
+        };
+
+        const url = `${Config.capiDomain}/atom/${Config.atomType}/${atomId}/usage?${querystring.stringify(query)}`;
+
         const requestBody = {
-            url: `${Config.capiDomain}/atom/${Config.atomType}/${atomId}/usage?api-key=${Config.capiKey}&page-size=${pageSize}`,
+            url: url,
             method: 'GET',
             contentType: 'application/json'
         };
