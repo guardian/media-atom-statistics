@@ -19,6 +19,7 @@ CAPI.getAtoms()
 
                     const result = {
                         id: atom.id,
+                        created: atom.contentChangeDetails && atom.contentChangeDetails.created && new Date(atom.contentChangeDetails.created.date),
                         category: atomData.metadata && atomData.metadata.categoryId,
                         title: atomData.title,
                         timesUsed: usages.response.total,
@@ -45,7 +46,7 @@ CAPI.getAtoms()
 
             console.table(summary);
 
-            const fields = ['id', 'category', 'title', 'timesUsed', 'placesUsed', 'youtubeId'];
+            const fields = ['id', 'created', 'category', 'title', 'timesUsed', 'placesUsed', 'youtubeId'];
 
             const csv = json2csv({data: result, fields: fields});
 
