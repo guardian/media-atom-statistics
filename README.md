@@ -4,12 +4,13 @@ Answering the question: how many media atoms have been created and how often hav
 
 ## Usage
 - `nvm use`
-- `npm install`
+- `yarn`
 - Set `CAPI_KEY` environment variable
-- `npm run get-statistics`
+- `yarn get-usage`
 
 A csv file will be created in the current directory outlining:
 - id
+- created
 - category
 - title
 - timesUsed
@@ -18,6 +19,5 @@ A csv file will be created in the current directory outlining:
 
 ## Configuration
 The following environment variables can be set:
-- `ATOM_TYPE`
 - `CAPI_DOMAIN`
 - `CAPI_KEY`

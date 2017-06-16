@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 class Config {
     static get capiKey() {
         return process.env.CAPI_KEY;
@@ -8,7 +10,41 @@ class Config {
     }
 
     static get atomType() {
-        return process.env.ATOM_TYPE || 'media';
+        return 'media';
+    }
+
+    static get fromDateAsString() {
+        const startOfMonth = moment().startOf('month');
+
+        const fromDate = process.env.FROM_DATE
+            ? moment(new Date(process.env.FROM_DATE))
+            : startOfMonth;
+
+        const date = fromDate.isValid()
+            ? fromDate
+            : startOfMonth;
+
+        return date.format(Config.dateFormat);
+    }
+
+    static get toDateAsString() {
+        const toDate = process.env.TO_DATE
+            ? moment(new Date(process.env.TO_DATE))
+            : moment();
+
+        const date = toDate.isValid()
+            ? toDate
+            : moment();
+
+        return date.format(Config.dateFormat);
+    }
+
+    static get dateFormat() {
+        return 'YYYY-MM-DD';
+    }
+
+    static get pageSize() {
+        return process.env.PAGE_SIZE || 100;
     }
 }
 

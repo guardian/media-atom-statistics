@@ -8,7 +8,7 @@ const json2csv = require('json2csv');
 const CAPI = require('./capi');
 const Config = require('./config');
 
-CAPI.getAtoms({pageSize: 100})
+CAPI.getAtoms()
     .then(atoms => {
         const promises = atoms.reduce((promisesList, atom) => {
             promisesList.push(new Promise(resolve => {
@@ -19,6 +19,7 @@ CAPI.getAtoms({pageSize: 100})
 
                     const result = {
                         id: atom.id,
+                        created: atom.contentChangeDetails && atom.contentChangeDetails.created && new Date(atom.contentChangeDetails.created.date),
                         category: atomData.metadata && atomData.metadata.categoryId,
                         title: atomData.title,
                         timesUsed: usages.response.total,
@@ -45,7 +46,7 @@ CAPI.getAtoms({pageSize: 100})
 
             console.table(summary);
 
-            const fields = ['id', 'category', 'title', 'timesUsed', 'placesUsed', 'youtubeId'];
+            const fields = ['id', 'created', 'category', 'title', 'timesUsed', 'placesUsed', 'youtubeId'];
 
             const csv = json2csv({data: result, fields: fields});
 
