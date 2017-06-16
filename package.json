@@ -4,7 +4,8 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "get-usage": "node ./usage-statistics.js"
+    "get-usage": "node ./usage-statistics.js",
+    "get-published": "node ./publish-statistics.js"
   },
   "author": "",
   "license": "ISC",

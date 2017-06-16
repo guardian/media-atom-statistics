@@ -77,6 +77,72 @@ class CAPI {
 
         return reqwest(requestBody);
     }
+
+    static getVideoPages() {
+        function capiQuery({page}) {
+            const query = {
+                'order-by': 'newest',
+                'from-date': Config.fromDateAsString,
+                'to-date': Config.toDateAsString,
+                'show-atoms': 'all',
+                'api-key': Config.capiKey,
+                page: page,
+                'page-size': Config.pageSize
+            };
+
+            const url = `${Config.capiDomain}/video?${querystring.stringify(query)}`;
+
+            const reqwestBody = {
+                url: url,
+                method: 'GET',
+                contentType: 'application/json'
+            };
+
+            return reqwest(reqwestBody);
+        }
+
+        function splitVideoPages(videoPages) {
+            return videoPages.reduce((splitPages, videoPage) => {
+                videoPage.atoms
+                    ? splitPages.atomPowered.push(videoPage)
+                    : splitPages.traditional.push(videoPage);
+                return splitPages;
+            }, {traditional: [], atomPowered: []});
+        }
+
+
+        return new Promise((resolve, reject) => {
+            capiQuery({page: 1})
+                .then(initialResponse => {
+                   const initialVideoPages = initialResponse.response.results;
+                   const totalPages = initialResponse.response.pages;
+
+                   if (totalPages === 1) {
+                       resolve(splitVideoPages(initialVideoPages));
+                   } else {
+                       const promiseList = [];
+
+                       let page = 2;
+
+                       while (totalPages >= page) {
+                           promiseList.push(capiQuery({page}));
+                           page = page + 1;
+                       }
+
+                       Promise.all(promiseList)
+                           .then(results => {
+                               const remainingVideoPages = results.reduce((allVideoPages, capiResponse) => {
+                                   const videoPages = capiResponse.response.results;
+                                   return allVideoPages.concat(videoPages);
+                               }, []);
+
+                               resolve(splitVideoPages(initialVideoPages.concat(remainingVideoPages)));
+                           })
+                           .catch(err => reject(err));
+                   }
+                });
+        });
+    }
 }
 
 module.exports = CAPI;
