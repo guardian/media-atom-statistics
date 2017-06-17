@@ -46,6 +46,15 @@ class Config {
     static get pageSize() {
         return process.env.PAGE_SIZE || 100;
     }
+
+    static get summary() {
+        return {
+            capiDomain: Config.capiDomain,
+            atomType: Config.atomType,
+            fromDate: Config.fromDateAsString,
+            toDate: Config.toDateAsString
+        }
+    }
 }
 
 module.exports = Config;

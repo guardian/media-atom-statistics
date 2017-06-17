@@ -8,6 +8,9 @@ const json2csv = require('json2csv');
 const CAPI = require('./capi');
 const Config = require('./config');
 
+console.log('CONFIGURATION');
+console.table(Config.summary);
+
 CAPI.getAtoms()
     .then(atoms => {
         const promises = atoms.reduce((promisesList, atom) => {
@@ -44,6 +47,7 @@ CAPI.getAtoms()
                 totalUsages: result.reduce((total, i) => {return total + i.timesUsed}, 0)
             };
 
+            console.log('OUTPUT');
             console.table(summary);
 
             const fields = ['id', 'created', 'category', 'title', 'timesUsed', 'placesUsed', 'youtubeId'];
